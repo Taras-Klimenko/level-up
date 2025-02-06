@@ -5,6 +5,8 @@ import { appRouter } from './trpc/router';
 import dotenv from 'dotenv';
 import multer from 'multer';
 
+import { getAccessToken } from './utils/token';
+
 dotenv.config();
 
 const app = express();
