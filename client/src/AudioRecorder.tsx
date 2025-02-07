@@ -16,7 +16,7 @@ const AudioRecorder = ({
 
   const startRecording = async () => {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const recorder = new MediaRecorder(stream);
+    const recorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
     mediaRecorderRef.current = recorder;
     audioChunks.current = [];
 

@@ -4,6 +4,7 @@ import { createExpressMiddleware } from '@trpc/server/adapters/express';
 import { appRouter } from './trpc/router';
 import dotenv from 'dotenv';
 import multer from 'multer';
+import path from 'path';
 
 import { getAccessToken } from './utils/token';
 
@@ -13,7 +14,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const upload = multer({ dest: 'uploads/' });
+const storage = multer.diskStorage({
+  destination: './uploads/', // Save to "uploads" folder
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname) || '.webm'; // Ensure .webm extension
+    cb(null, file.fieldname + '-' + Date.now() + ext);
+  },
+});
+
+const upload = multer({ storage });
 
 const uploadHandler: RequestHandler = (req, res) => {
   const file = req.file as Express.Multer.File;

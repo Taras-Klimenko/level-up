@@ -9,7 +9,7 @@ let accessToken: string | null = null;
 let tokenExpiry: number | null = null;
 
 // This is to disable SSL verification for development
-const axiosInstance = axios.create({
+export const axiosInstance = axios.create({
   httpsAgent: new https.Agent({
     rejectUnauthorized: false,
   }),

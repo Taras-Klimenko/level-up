@@ -18,20 +18,20 @@ function App() {
 
     const { fileName } = await uploadResponse.json();
 
-    const transcribeResponse = await fetch(
-      'http://localhost:3000/trpc/transcribeAudio',
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fileName }),
-      }
-    );
+    // const transcribeResponse = await fetch(
+    //   'http://localhost:3000/trpc/transcribeAudio',
+    //   {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify({ fileName }),
+    //   }
+    // );
 
-    const data = await transcribeResponse.json();
+    // const data = await transcribeResponse.json();
 
-    console.log('Transcription:', data);
-    setSpeechToText(data.result.data.transcription);
-    setProcessing(false);
+    // console.log('Transcription:', data);
+    // setSpeechToText(data.result.data.transcription);
+    // setProcessing(false);
   };
 
   return (
