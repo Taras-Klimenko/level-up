@@ -40,6 +40,10 @@ app.use('/trpc', createExpressMiddleware({ router: appRouter }));
 
 const PORT = process.env.PORT || 3000;
 
+getAccessToken('GIGACHAT_API_PERS', 'SBER_CHAT_AUTH_KEY').then((key) =>
+  console.log('token acquired: ', key)
+);
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

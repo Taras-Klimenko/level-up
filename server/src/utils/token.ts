@@ -15,36 +15,59 @@ export const axiosInstance = axios.create({
   }),
 });
 
-const fetchNewToken = async (): Promise<string | null> => {
+interface TokenStore {
+  accessToken: string | null;
+  tokenExpiry: number | null;
+}
+
+const tokens: Record<string, TokenStore> = {};
+
+const fetchNewToken = async (
+  scope: string,
+  authKey: string
+): Promise<string | null> => {
   try {
     const response = await axiosInstance.post(
       `${process.env.SBER_AUTH_URL}`,
-      'scope=SALUTE_SPEECH_PERS',
+      `scope=${scope}`,
       {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/x-www-form-urlencoded',
-          Authorization: `Basic ${process.env.SBER_AUTH_KEY}`,
+          Authorization: `Basic ${process.env[authKey]}`,
           RqUID: uuidv4(),
         },
       }
     );
-    accessToken = response.data.access_token;
-    tokenExpiry = response.data.expires_at - 70000; // requires new token if the old one has less than minute of lifetime
 
-    return accessToken;
+    tokens[scope] = {
+      accessToken: response.data.access_token,
+      tokenExpiry: response.data.expires_at - 70000, // requires new token if the old one has less than minute of lifetime
+    };
+
+    return response.data.access_token;
   } catch (error: any) {
     console.error(
-      'Error fetching access token: ',
+      `Error fetching ${scope} access token: `,
       error.response?.data || error.message
     );
-    throw new Error('Failed to fetch access token');
+    throw new Error(`Failed to fetch ${scope} access token`);
   }
 };
 
-export const getAccessToken = async (): Promise<string | null> => {
-  if (!accessToken || !tokenExpiry || Date.now() >= tokenExpiry) {
-    return await fetchNewToken();
+export const getAccessToken = async (
+  scope: string,
+  authKey: string
+): Promise<string | null> => {
+  const tokenData = tokens[scope];
+
+  if (
+    !tokenData ||
+    !tokenData.accessToken ||
+    !tokenData.tokenExpiry ||
+    Date.now() >= tokenData.tokenExpiry
+  ) {
+    return await fetchNewToken(scope, authKey);
   }
-  return accessToken;
+  return tokenData.accessToken;
 };

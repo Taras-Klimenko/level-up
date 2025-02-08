@@ -9,7 +9,10 @@ dotenv.config();
 
 const getTextFromSpeech = async () => {
   try {
-    const accessToken = await getAccessToken();
+    const accessToken = await getAccessToken(
+      'SALUTE_SPEECH_PERS',
+      'SBER_AUTH_KEY'
+    );
 
     if (!accessToken) {
       throw new Error('Failed to receive access token');
