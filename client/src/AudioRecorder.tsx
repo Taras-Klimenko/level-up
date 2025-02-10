@@ -1,13 +1,16 @@
 import { useState, useRef } from 'react';
 import Spinner from './components/spinner/Spinner';
+import Markdown from 'react-markdown';
 
 const AudioRecorder = ({
   onAudioRecorded,
   speechToText,
+  assessment,
   processing,
 }: {
   onAudioRecorded: (audioBlob: Blob) => void;
   speechToText: string;
+  assessment: string;
   processing: boolean;
 }) => {
   const [isRecording, setIsRecording] = useState(false);
@@ -49,6 +52,8 @@ const AudioRecorder = ({
         </button>
       </div>
       <div>{processing ? <Spinner /> : speechToText}</div>
+      <hr></hr>
+      <Markdown>{assessment}</Markdown>
     </>
   );
 };

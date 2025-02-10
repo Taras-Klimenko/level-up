@@ -7,7 +7,7 @@ import { getAccessToken, axiosInstance } from './token';
 
 dotenv.config();
 
-const getTextFromSpeech = async () => {
+export const getTextFromSpeech = async (audioFilePath: string) => {
   try {
     const accessToken = await getAccessToken(
       'SALUTE_SPEECH_PERS',
@@ -18,12 +18,7 @@ const getTextFromSpeech = async () => {
       throw new Error('Failed to receive access token');
     }
 
-    const audioPath = path.join(
-      __dirname,
-      '../../uploads',
-      'audio-1738949718143.mp3'
-    );
-    const audioData = fs.readFileSync(audioPath);
+    const audioData = fs.readFileSync(audioFilePath);
 
     const response = await axiosInstance.post(
       `${process.env.SBER_SPEECH_RECOGNITION_URL}`,
@@ -37,7 +32,7 @@ const getTextFromSpeech = async () => {
       }
     );
 
-    console.log('Speech Recognition Response:', response.data);
+    return response.data.result.join('');
   } catch (error: any) {
     console.error(
       'Error during speech recognition:',
@@ -45,5 +40,3 @@ const getTextFromSpeech = async () => {
     );
   }
 };
-
-getTextFromSpeech();

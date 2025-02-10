@@ -17,8 +17,8 @@ app.use(express.json());
 const storage = multer.diskStorage({
   destination: './uploads/', // Save to "uploads" folder
   filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname) || '.webm'; // Ensure .webm extension
-    cb(null, file.fieldname + '-' + Date.now() + ext);
+    const extension = path.extname(file.originalname) || '.webm'; // Ensure .webm extension
+    cb(null, file.fieldname + '-' + Date.now() + extension);
   },
 });
 
@@ -39,10 +39,6 @@ app.post('/upload', upload.single('audio'), uploadHandler);
 app.use('/trpc', createExpressMiddleware({ router: appRouter }));
 
 const PORT = process.env.PORT || 3000;
-
-getAccessToken('GIGACHAT_API_PERS', 'SBER_CHAT_AUTH_KEY').then((key) =>
-  console.log('token acquired: ', key)
-);
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
